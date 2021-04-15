@@ -103,7 +103,7 @@ async function writeImageFilesPromise(posts, config) {
 	let delay = 0;
 	const payloads = posts.flatMap(post => {
 		const postPath = getPostPath(post, config);
-		const imagesDir = path.join(path.dirname(postPath), 'images');
+		const imagesDir = path.dirname(postPath); //GSONG_NOTE: Put images in the same path as the md file. // path.join(path.dirname(postPath), 'images');
 		return post.meta.imageUrls.flatMap(imageUrl => {
 			const filename = shared.getFilenameFromUrl(imageUrl);
 			const destinationPath = path.join(imagesDir, filename);

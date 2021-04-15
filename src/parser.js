@@ -48,6 +48,14 @@ function getItemsOfType(data, type) {
 	return data.rss.channel[0].item.filter(item => item.post_type[0] === type);
 }
 
+//custom for getting comic page info
+function remapPostType(postType) {
+	if(postType === "mc_comicpage")
+		return "comicpage"
+	
+	return null;
+}
+
 function collectPosts(data, postTypes, config) {
 	// this is passed into getPostContent() for the markdown conversion
 	const turndownService = translator.initTurndownService();
@@ -67,7 +75,9 @@ function collectPosts(data, postTypes, config) {
 				},
 				frontmatter: {
 					title: getPostTitle(post),
+					slug: getPostSlug(post),
 					date: getPostDate(post),
+					posttype: remapPostType(postType),
 					categories: getCategories(post),
 					tags: getTags(post)
 				},
@@ -187,6 +197,7 @@ function mergeImagesIntoPosts(images, posts) {
 			// this image was uploaded as an attachment to this post
 			if (image.postId === post.meta.id) {
 				shouldAttach = true;
+				post.frontmatter.comicImage = shared.getFilenameFromUrl(image.url);
 			}
 
 			// this image was set as the featured image for this post
